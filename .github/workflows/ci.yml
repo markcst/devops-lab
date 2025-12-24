@@ -8,5 +8,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Say hello
-        run: exit 1
+        run: echo "CI is running again"
 
