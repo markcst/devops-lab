@@ -19,4 +19,6 @@ jobs:
         with:
           name: build-output
           path: output/
-        
+      - name: Build Docker image
+        run: docker build -t demo-image:${{ github.sha }} .
+
