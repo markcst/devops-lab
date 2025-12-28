@@ -28,3 +28,10 @@ jobs:
       - name: Build Docker image
         run: docker build -t demo-image:${{ github.sha }} .
 
+      - name: Use secret safely
+        env:
+          MY_SECRET: ${{ secrets.MY_SECRET }}
+        run: |
+          echo "Secret is set"
+          [ -n "MY_SECRET" ] && echo "OK: secret available"
+
