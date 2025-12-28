@@ -4,6 +4,10 @@ on:
   push:
   pull_request:
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -11,27 +15,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Say hello
-        run: echo "CI is running again"
-
-      - name: Generate artifact
+      - name: Login to GHCR
         run: |
-          mkdir output
-          echo "Build from CI at $(date)" > output/build.txt
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-output
-          path: output/
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Build Docker image
-        run: docker build -t demo-image:${{ github.sha }} .
+        run: docker build -t ghcr.io/${{ github.repository }}/demo-image:${{ github.sha }} .
 
-      - name: Use secret safely
-        env:
-          MY_SECRET: ${{ secrets.MY_SECRET }}
+      - name: Push Docker image
         run: |
-          echo "Secret is set"
-          [ -n "MY_SECRET" ] && echo "OK: secret available"
+          docker push ghcr.io/${{ github.repository }}/demo-image:${{ github.sha }}
 
