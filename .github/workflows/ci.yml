@@ -10,4 +10,13 @@ jobs:
     steps:
       - name: Say hello
         run: echo "CI is running again"
-
+      - name: Generate artifact
+        run: |
+          mkdir output
+          echo "Build from CI at $(date)" > output/build.txt
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: output/
+        
